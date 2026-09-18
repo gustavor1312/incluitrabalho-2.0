@@ -58,17 +58,20 @@ def rolar_para(element_id):
     """
     components.html(js, height=0, width=0)
 
+# Definições dinâmicas de cores baseadas no modo Alto Contraste
 primary = "#00d9ff" if st.session_state.contraste else "#2563eb"
-bg = "#05070a" if st.session_state.contraste else "#eef3f8"
+bg = "#000000" if st.session_state.contraste else "#eef3f8"
 surface = "#111820" if st.session_state.contraste else "#ffffff"
 text = "#ffffff" if st.session_state.contraste else "#172033"
-muted = "#d6dce5" if st.session_state.contraste else "#596579"
-border = "#ffffff" if st.session_state.contraste else "#d7e0ea"
+muted = "#00d9ff" if st.session_state.contraste else "#596579"
+border = "#00d9ff" if st.session_state.contraste else "#d7e0ea"
+btn_bg = "#1f2937" if st.session_state.contraste else "#ffffff"
+btn_text = "#ffffff" if st.session_state.contraste else "#17345f"
 fonte_tamanho = f"{st.session_state.fonte}px"
 
 st.markdown(f"""
 <style>
-/* Ajuste dinâmico do tamanho da fonte global */
+/* Tamanho dinâmico de fonte */
 html, body, [data-testid="stAppViewContainer"], .stApp, p, span, label, input, textarea, select, button {{
     font-size: {fonte_tamanho} !important;
 }}
@@ -90,24 +93,22 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"], .stApp {{
 }}
 .stApp p, .stApp label, .stApp h1, .stApp h2, .stApp h3, .stApp h4,
 .stApp [data-testid="stMarkdownContainer"] {{
-    color: {text};
+    color: {text} !important;
 }}
 .hero {{
-    background: linear-gradient(135deg, {"#111820,#111820" if st.session_state.contraste else "#e8f1ff,#ffffff"}) !important;
-    border: 1px solid {border};
+    background: {surface} !important;
+    border: 2px solid {border};
     border-radius: 16px;
     padding: 30px;
     margin: 20px 0;
-    box-shadow: 0 5px 20px rgba(15,23,42,.08);
 }}
 .card {{
     background: {surface} !important;
     color: {text} !important;
-    border: 1px solid {border};
+    border: 2px solid {border};
     border-radius: 14px;
     padding: 20px;
     margin-bottom: 16px;
-    box-shadow: 0 4px 18px rgba(15,23,42,.08);
 }}
 .card h2, .card h3, .card p, .card strong {{
     color: {text} !important;
@@ -138,22 +139,30 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"], .stApp {{
 .notice.info {{ background:#eaf2ff; border-left:5px solid #2563eb; color:#173b76; }}
 .notice.error {{ background:#feecec; border-left:5px solid #dc2626; color:#7f1d1d; }}
 
+/* Correção de estilo nos botões para garantir visibilidade no alto contraste */
 div[data-testid="stButton"] > button,
 div[data-testid="stFormSubmitButton"] > button {{
-    background: #ffffff !important;
-    color: #17345f !important;
-    border: 1px solid #b9c8da !important;
+    background-color: {btn_bg} !important;
+    color: {btn_text} !important;
+    border: 2px solid {border} !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
     min-height: 42px !important;
-    box-shadow: 0 2px 8px rgba(15,23,42,.06) !important;
+}}
+div[data-testid="stButton"] > button p,
+div[data-testid="stFormSubmitButton"] > button p {{
+    color: {btn_text} !important;
 }}
 div[data-testid="stButton"] > button:hover,
 div[data-testid="stFormSubmitButton"] > button:hover {{
-    background: #eaf2ff !important;
-    color: #0f3f91 !important;
-    border-color: {primary} !important;
+    background-color: {primary} !important;
+    color: #000000 !important;
 }}
+div[data-testid="stButton"] > button:hover p,
+div[data-testid="stFormSubmitButton"] > button:hover p {{
+    color: #000000 !important;
+}}
+
 .stTextInput input, .stTextArea textarea,
 .stSelectbox [data-baseweb="select"] > div {{
     background: {surface} !important;
@@ -219,21 +228,25 @@ with a3:
         st.rerun()
 
 # Voz no navegador
-voice_html = """
+voice_bg = "#1f2937" if st.session_state.contraste else "#ffffff"
+voice_text = "#ffffff" if st.session_state.contraste else "#17345f"
+voice_border = "#00d9ff" if st.session_state.contraste else "#9fb4cc"
+
+voice_html = f"""
 <!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <style>
-body { margin:0; font-family:Arial,sans-serif; background:transparent; }
-.row { display:flex; flex-wrap:wrap; gap:10px; }
-button {
-  border:1px solid #9fb4cc; border-radius:10px; padding:12px 15px;
-  background:#fff; color:#17345f; font-weight:700; cursor:pointer;
-}
-button:hover { background:#eaf2ff; }
-#status { margin-top:10px; padding:10px 12px; border-radius:9px;
-  background:#eaf7ee; color:#14532d; font-size:14px; }
+body {{ margin:0; font-family:Arial,sans-serif; background:transparent; }}
+.row {{ display:flex; flex-wrap:wrap; gap:10px; }}
+button {{
+  border:2px solid {voice_border}; border-radius:10px; padding:12px 15px;
+  background:{voice_bg}; color:{voice_text}; font-weight:700; cursor:pointer;
+}}
+button:hover {{ background:{primary}; color:#000; }}
+#status {{ margin-top:10px; padding:10px 12px; border-radius:9px;
+  background:#eaf7ee; color:#14532d; font-size:14px; }}
 </style>
 </head>
 <body>
@@ -246,67 +259,67 @@ button:hover { background:#eaf2ff; }
 <script>
 let reconhecimento = null;
 
-function textoPagina() {
+function textoPagina() {{
   const main = window.parent.document.querySelector('section.main');
   if (!main) return window.parent.document.body.innerText;
   return main.innerText.replace(/\\s+/g, ' ').trim();
-}
+}}
 
-function lerPagina() {
+function lerPagina() {{
   pararLeitura();
   const texto = textoPagina();
-  if (!('speechSynthesis' in window)) {
+  if (!('speechSynthesis' in window)) {{
     document.getElementById('status').textContent = 'Seu navegador não oferece leitura por voz.';
     return;
-  }
-  const partes = texto.match(/.{1,450}(?:\\s|$)/g) || [texto];
+  }}
+  const partes = texto.match(/.{{1,450}}(?:\\s|$)/g) || [texto];
   let i = 0;
-  function falarProxima() {
-    if (i >= partes.length) {
+  function falarProxima() {{
+    if (i >= partes.length) {{
       document.getElementById('status').textContent = 'Leitura concluída.';
       return;
-    }
+    }}
     const u = new SpeechSynthesisUtterance(partes[i++]);
     u.lang = 'pt-BR';
     u.rate = 0.95;
     u.onend = falarProxima;
     speechSynthesis.speak(u);
-  }
+  }}
   document.getElementById('status').textContent = '🔊 Lendo a página...';
   falarProxima();
-}
+}}
 
-function pararLeitura() {
+function pararLeitura() {{
   if ('speechSynthesis' in window) speechSynthesis.cancel();
   document.getElementById('status').textContent = 'Leitura parada.';
-}
+}}
 
-function comandoVoz() {
+function comandoVoz() {{
   const SR = window.parent.SpeechRecognition || window.parent.webkitSpeechRecognition;
-  if (!SR) {
+  if (!SR) {{
     document.getElementById('status').textContent =
       'Reconhecimento de voz não disponível. Use Chrome ou Edge.';
     return;
-  }
+  }}
   if (reconhecimento) reconhecimento.stop();
   reconhecimento = new SR();
   reconhecimento.lang = 'pt-BR';
   reconhecimento.continuous = false;
   reconhecimento.interimResults = false;
-  reconhecimento.onstart = () => {
+  reconhecimento.onstart = () => {{
     document.getElementById('status').textContent = '🎙 Ouvindo... Diga um comando.';
-  };
-  reconhecimento.onresult = (e) => {
+  }};
+  reconhecimento.onresult = (e) => {{
     const comando = e.results[0][0].transcript.toLowerCase();
     document.getElementById('status').textContent = 'Comando reconhecido: ' + comando;
     if (comando.includes('ler') || comando.includes('leia')) lerPagina();
     else if (comando.includes('parar')) pararLeitura();
-  };
-  reconhecimento.onerror = () => {
+  }};
+  reconhecimento.onerror = () => {{
     document.getElementById('status').textContent = 'Erro ao reconhecer a voz. Verifique a permissão do microfone.';
-  };
+  }};
   reconhecimento.start();
-}
+}}
 </script>
 </body>
 </html>
