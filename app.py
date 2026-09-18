@@ -64,9 +64,15 @@ surface = "#111820" if st.session_state.contraste else "#ffffff"
 text = "#ffffff" if st.session_state.contraste else "#172033"
 muted = "#d6dce5" if st.session_state.contraste else "#596579"
 border = "#ffffff" if st.session_state.contraste else "#d7e0ea"
+fonte_tamanho = f"{st.session_state.fonte}px"
 
 st.markdown(f"""
 <style>
+/* Ajuste dinâmico do tamanho da fonte global */
+html, body, [data-testid="stAppViewContainer"], .stApp, p, span, label, input, textarea, select, button {{
+    font-size: {fonte_tamanho} !important;
+}}
+
 html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"], .stApp {{
     background: {bg} !important;
 }}
@@ -115,7 +121,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"], .stApp {{
     padding:4px 10px;
     background:#e8f1ff;
     color:#1456c4 !important;
-    font-size:.82rem;
+    font-size:.82rem !important;
     font-weight:700;
     margin:2px 4px 8px 0;
 }}
