@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="IncluiTrabalho 2.0 - plataforma inclusiva de oportunidades de emprego.">
+<title>IncluiTrabalho 2.0</title>
+<style>
+:root{
+  --primary:#2563eb;--primary-dark:#1e40af;--success:#15803d;--danger:#dc2626;
+  --warning:#b45309;--bg:#f3f6fa;--surface:#fff;--text:#172033;--muted:#596579;
+  --border:#d9e0ea;--focus:#f59e0b;--shadow:0 4px 18px rgba(15,23,42,.09)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.55}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+ outline:4px solid var(--focus);outline-offset:2px
+}
+header{background:var(--surface);border-bottom:4px solid var(--primary);position:sticky;top:0;z-index:20}
+.header-inner{max-width:1100px;margin:auto;padding:14px 18px;display:flex;gap:16px;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;color:var(--primary);font-weight:800;font-size:1.35rem}
+.logo span:first-child{font-size:1.8rem}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+.container{max-width:1100px;margin:auto;padding:20px}
+button,.btn{border:0;border-radius:9px;padding:11px 15px;background:var(--primary);color:#fff;font-weight:700}
+button:hover,.btn:hover{background:var(--primary-dark)}
+.btn.secondary{background:#fff;color:var(--primary);border:2px solid var(--primary)}
+.btn.success{background:var(--success)}
+.btn.danger{background:var(--danger)}
+.btn.small{padding:7px 10px;font-size:.9rem}
+.btn.listening{background:#dc2626;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.75}}
+.hero{background:linear-gradient(135deg,#e8f1ff,#fff);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px}
+.hero h1{margin:0 0 8px;font-size:clamp(1.7rem,4vw,2.5rem)}
+.hero p{max-width:760px;color:var(--muted)}
+.access{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.card h2,.card h3{margin-top:0}
+.badge{display:inline-block;border-radius:999px;padding:4px 10px;background:#e8f1ff;color:var(--primary);font-size:.82rem;font-weight:700;margin:2px 4px 8px 0}
+.badge.green{background:#e8f7ed;color:var(--success)}
+.badge.orange{background:#fff4df;color:var(--warning)}
+label{font-weight:700;display:block;margin:10px 0 5px}
+input,select,textarea{width:100%;padding:12px;border:2px solid var(--border);border-radius:8px;background:#fff;color:var(--text)}
+textarea{min-height:100px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.form-grid .full{grid-column:1/-1}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.notice{padding:13px 15px;border-radius:9px;margin:12px 0}
+.notice.info{background:#eaf2ff;border-left:5px solid var(--primary)}
+.notice.success{background:#eaf7ee;border-left:5px solid var(--success)}
+.notice.error{background:#feecec;border-left:5px solid var(--danger)}
+.hidden{display:none!important}
+.searchbar{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:9px;margin-bottom:18px}
+.job-title{font-size:1.2rem;font-weight:800;margin:4px 0}
+.meta{color:var(--muted);font-size:.94rem}
+.status{font-weight:800}
+.status.enviada{color:var(--primary)}.status.analise{color:var(--warning)}.status.entrevista{color:#7c3aed}.status.aprovado{color:var(--success)}.status.recusado{color:var(--danger)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:15px;text-align:center}
+.kpi strong{display:block;font-size:1.6rem;color:var(--primary)}
+.checkbox{display:flex;align-items:center;gap:8px;margin:8px 0;font-weight:600}
+.checkbox input{width:auto}
+footer{padding:30px 20px;text-align:center;color:var(--muted)}
+.empty{text-align:center;padding:30px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal-box{background:#fff;color:#172033;max-width:720px;width:100%;max-height:90vh;overflow:auto;border-radius:15px;padding:22px}
+.high-contrast{--bg:#000;--surface:#111;--text:#fff;--muted:#eee;--border:#fff;--primary:#00e5ff;--primary-dark:#00b8cc;--focus:#ff0}
+.high-contrast input,.high-contrast select,.high-contrast textarea{background:#000;color:#fff;border-color:#fff}
+.high-contrast .hero{background:#111}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#statusVoz{font-size:.9rem;padding:8px 12px;border-radius:8px;margin:0 0 12px;display:none}
+#statusVoz.ativo{display:block;background:#eaf2ff;border-left:5px solid var(--primary)}
+#statusVoz.ouvindo{background:#feecec;border-left:5px solid var(--danger)}
+@media(max-width:800px){
+ .grid,.form-grid{grid-template-columns:1fr}.searchbar{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}
+ .header-inner{align-items:flex-start;flex-direction:column}nav{width:100%}nav button{flex:1}
+}
+@media(max-width:480px){
+ .container{padding:12px}.card{padding:15px}.kpis{grid-template-columns:1fr 1fr}
+ button,.btn{width:100%}.actions button,.actions .btn{width:auto}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo" aria-label="IncluiTrabalho">
+      <span aria-hidden="true">♿</span><span>IncluiTrabalho 2.0</span>
+    </div>
+    <nav aria-label="Navegação principal">
+      <button onclick="irPara('inicio')">Início</button>
+      <button onclick="irPara('vagas')">Vagas</button>
+      <button onclick="irPara('perfil')">Meu perfil</button>
+      <button onclick="irPara('candidaturas')">Candidaturas</button>
+      <button onclick="alternarModo()">Empresa</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container" id="inicio">
+  <div class="access" aria-label="Recursos de acessibilidade">
+    <button onclick="aumentarFonte()">A+ Aumentar fonte</button>
+    <button onclick="diminuirFonte()">A− Diminuir fonte</button>
+    <button class="btn secondary" onclick="contraste()">◐ Alto contraste</button>
+    <button class="btn secondary" onclick="lerPagina()">🔊 Ler página</button>
+    <button class="btn secondary" onclick="pararLeitura()">⏹ Parar leitura</button>
+    <button id="btnVoz" class="btn secondary" onclick="alternarVoz()" aria-pressed="false">🎤 Comandos de voz</button>
+  </div>
+  <div id="statusVoz" role="status" aria-live="polite"></div>
+
+  <section class="hero">
+    <h1>Oportunidades para todos.</h1>
+    <p>Encontre vagas, apresente seu talento e informe às empresas quais recursos de acessibilidade você precisa. O protótipo funciona no navegador e salva os dados localmente neste dispositivo.</p>
+    <p style="margin-top:10px;font-size:.95rem"><strong>Comandos de voz:</strong> diga “ler”, “parar”, “aumentar fonte”, “diminuir fonte”, “contraste”, “início”, “vagas”, “perfil”, “candidaturas” ou “empresa”.</p>
+    <div class="actions">
+      <button onclick="irPara('vagas')">🔎 Encontrar vagas</button>
+      <button class="btn secondary" onclick="irPara('perfil')">👤 Criar meu perfil</button>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>♿ Acessibilidade</h2>
+      <p>Fonte ajustável, alto contraste, leitura de conteúdo e <strong>comandos de voz</strong> com o recurso disponível no navegador.</p>
+    </div>
+    <div class="card">
+      <h2>🧏 Recursos para pessoas surdas</h2>
+      <p>As vagas podem informar atendimento em Libras, entrevista por vídeo, comunicação escrita e outros recursos.</p>
+    </div>
+  </section>
+
+  <section id="vagas">
+    <div class="card">
+      <h2>🔎 Buscar oportunidades</h2>
+      <div class="searchbar">
+        <input id="busca" placeholder="Cargo, empresa ou palavra-chave" oninput="renderVagas()" aria-label="Buscar vagas">
+        <select id="localFiltro" onchange="renderVagas()" aria-label="Local">
+          <option value="">Todos os locais</option>
+          <option>Remoto</option><option>São Paulo, SP</option><option>Franco da Rocha, SP</option><option>Caieiras, SP</option>
+        </select>
+        <select id="acessFiltro" onchange="renderVagas()" aria-label="Acessibilidade">
+          <option value="">Acessibilidade</option>
+          <option value="libras">Libras</option>
+          <option value="cego">Leitor de tela</option>
+          <option value="remoto">Remoto</option>
+        </select>
+        <button onclick="limparFiltros()">Limpar</button>
+      </div>
+      <div id="listaVagas"></div>
+    </div>
+  </section>
+
+  <section id="perfil">
+    <div class="card">
+      <h2>👤 Meu perfil profissional</h2>
+      <div id="perfilMsg"></div>
+      <div class="form-grid">
+        <div><label for="nome">Nome</label><input id="nome" autocomplete="name"></div>
+        <div><label for="email">E-mail</label><input id="email" type="email" autocomplete="email"></div>
+        <div><label for="telefone">Telefone</label><input id="telefone" autocomplete="tel"></div>
+        <div><label for="cidade">Cidade</label><input id="cidade" placeholder="Ex.: Caieiras - SP"></div>
+        <div class="full"><label for="objetivo">Objetivo profissional</label><textarea id="objetivo" placeholder="Conte resumidamente que tipo de oportunidade procura."></textarea></div>
+        <div class="full"><label>Recursos de acessibilidade necessários</label>
+          <label class="checkbox"><input type="checkbox" id="pcdVisual"> Apoio para deficiência visual / leitor de tela</label>
+          <label class="checkbox"><input type="checkbox" id="pcdSurda"> Comunicação acessível para pessoa surda</label>
+          <label class="checkbox"><input type="checkbox" id="libras"> Intérprete / atendimento em Libras</label>
+          <label class="checkbox"><input type="checkbox" id="legendas"> Vídeos e entrevistas com legendas</label>
+          <label class="checkbox"><input type="checkbox" id="outrosAcess"> Outro recurso</label>
+        </div>
+        <div class="full"><label for="habilidades">Habilidades</label><input id="habilidades" placeholder="Ex.: informática, atendimento, administração..."></div>
+        <div class="full"><label for="curriculo">Link do currículo (opcional)</label><input id="curriculo" type="url" placeholder="https://..."></div>
+      </div>
+      <div class="actions"><button class="btn success" onclick="salvarPerfil()">💾 Salvar perfil</button><button class="btn secondary" onclick="limparPerfil()">Limpar formulário</button></div>
+    </div>
+  </section>
+
+  <section id="candidaturas">
+    <div class="card">
+      <h2>📩 Minhas candidaturas</h2>
+      <div id="listaCandidaturas"></div>
+    </div>
+  </section>
+
+  <section id="empresa" class="hidden">
+    <div class="card">
+      <h2>🏢 Área da empresa</h2>
+      <div class="notice info">Cadastre uma oportunidade e informe claramente os recursos de acessibilidade oferecidos.</div>
+      <div class="form-grid">
+        <div><label for="vTitulo">Título da vaga *</label><input id="vTitulo" placeholder="Ex.: Assistente Administrativo"></div>
+        <div><label for="vEmpresa">Empresa *</label><input id="vEmpresa" placeholder="Nome da empresa"></div>
+        <div><label for="vLocal">Local *</label><input id="vLocal" placeholder="Remoto / São Paulo, SP"></div>
+        <div><label for="vTipo">Modalidade</label><select id="vTipo"><option>Presencial</option><option>Híbrido</option><option>Remoto</option></select></div>
+        <div class="full"><label for="vDesc">Descrição</label><textarea id="vDesc" placeholder="Atividades, requisitos e informações importantes."></textarea></div>
+        <div class="full"><label>Recursos oferecidos</label>
+          <label class="checkbox"><input type="checkbox" id="vLibras"> Atendimento/interação em Libras</label>
+          <label class="checkbox"><input type="checkbox" id="vLeitor"> Ambiente compatível com leitor de tela</label>
+          <label class="checkbox"><input type="checkbox" id="vLegendas"> Entrevista/vídeo com legendas</label>
+          <label class="checkbox"><input type="checkbox" id="vPcD"> Vaga exclusiva para PCD</label>
+        </div>
+      </div>
+      <button class="btn success" onclick="cadastrarVaga()">📢 Publicar vaga</button>
+    </div>
+    <div class="card">
+      <h2>📋 Vagas cadastradas</h2>
+      <div id="empresaVagas"></div>
+    </div>
+  </section>
+</main>
+
+<footer>IncluiTrabalho 2.0 — protótipo de plataforma de inclusão profissional. Comandos de voz disponíveis.</footer>
+
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+  <div class="modal-box">
+    <h2 id="modalTitulo"></h2>
+    <div id="modalConteudo"></div>
+    <div class="actions"><button onclick="fecharModal()">Fechar</button></div>
+  </div>
+</div>
+
+<script>
+const KEY_VAGAS='incluitrabalho_vagas_v2', KEY_PERFIL='incluitrabalho_perfil_v2', KEY_CAND='incluitrabalho_candidaturas_v2';
+let fonte=16, modoEmpresa=false;
+
+const vagasPadrao=[
+ {id:1,titulo:'Desenvolvedor Front-end Jr',empresa:'TechAcessível',local:'Remoto',modalidade:'Remoto',descricao:'Desenvolvimento de interfaces digitais acessíveis.',pcd:true,libras:false,leitor:true,legendas:true},
+ {id:2,titulo:'Analista de Dados',empresa:'InclusãoDigital',local:'São Paulo, SP',modalidade:'Híbrido',descricao:'Análise de dados e elaboração de relatórios.',pcd:false,libras:true,leitor:true,legendas:true},
+ {id:3,titulo:'Assistente Administrativo',empresa:'Empresa Inclusiva',local:'Caieiras, SP',modalidade:'Presencial',descricao:'Apoio administrativo, organização de documentos e atendimento.',pcd:true,libras:true,leitor:true,legendas:true}
+];
+
+function getVagas(){return JSON.parse(localStorage.getItem(KEY_VAGAS)||'null')||vagasPadrao}
+function setVagas(v){localStorage.setItem(KEY_VAGAS,JSON.stringify(v))}
+function getPerfil(){return JSON.parse(localStorage.getItem(KEY_PERFIL)||'{}')}
+function getCand(){return JSON.parse(localStorage.getItem(KEY_CAND)||'[]')}
+function setCand(v){localStorage.setItem(KEY_CAND,JSON.stringify(v))}
+function irPara(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});if(id==='vagas')renderVagas();if(id==='candidaturas')renderCandidaturas()}
+function alternarModo(){modoEmpresa=!modoEmpresa;document.getElementById('empresa').classList.toggle('hidden',!modoEmpresa);if(modoEmpresa)document.getElementById('empresa').scrollIntoView({behavior:'smooth'});renderEmpresa()}
+function aumentarFonte(){if(fonte<24){fonte+=2;document.body.style.fontSize=fonte+'px';}}
+function diminuirFonte(){if(fonte>14){fonte-=2;document.body.style.fontSize=fonte+'px';}}
+function contraste(){document.body.classList.toggle('high-contrast');}
+function lerPagina(){if(!('speechSynthesis' in window)){alert('A leitura de voz não está disponível neste navegador.');return}pararLeitura();let texto=document.querySelector('main').innerText;let u=new SpeechSynthesisUtterance(texto);u.lang='pt-BR';speechSynthesis.speak(u)}
+function pararLeitura(){if('speechSynthesis' in window)speechSynthesis.cancel()}
+
+/* ========== COMANDOS DE VOZ ========== */
+let reconhecimento = null;
+let ouvindo = false;
+
+function suporteReconhecimento() {
+  return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+}
+
+function criarReconhecimento() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  const r = new SR();
+  r.lang = 'pt-BR';
+  r.continuous = true;
+  r.interimResults = false;
+  r.maxAlternatives = 1;
+
+  r.onstart = () => {
+    ouvindo = true;
+    atualizarUIVoz();
+  };
+
+  r.onend = () => {
+    // Reinicia automaticamente se ainda estiver ativo
+    if (ouvindo) {
+      try { r.start(); } catch (e) { /* evita erro se já estiver rodando */ }
+    } else {
+      atualizarUIVoz();
+    }
+  };
+
+  r.onerror = (ev) => {
+    if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed') {
+      ouvindo = false;
+      mostrarStatusVoz('Permissão de microfone negada. Permita o acesso e tente de novo.', false);
+      atualizarUIVoz();
+    } else if (ev.error === 'no-speech') {
+      // silêncio — continua ouvindo
+    } else {
+      console.warn('Erro de reconhecimento:', ev.error);
+    }
+  };
+
+  r.onresult = (ev) => {
+    const ultimo = ev.results[ev.results.length - 1];
+    if (!ultimo.isFinal) return;
+    const frase = (ultimo[0].transcript || '').trim().toLowerCase();
+    if (frase) processarComando(frase);
+  };
+
+  return r;
+}
+
+function normalizar(texto) {
+  return texto
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function processarComando(frase) {
+  const t = normalizar(frase);
+  mostrarStatusVoz('Ouvi: “' + frase + '”', true);
+
+  // Leitura
+  if (/\b(ler|leia|leitura|ler pagina|leia a pagina|ler a pagina)\b/.test(t)) {
+    lerPagina();
+    falarFeedback('Lendo a página.');
+    return;
+  }
+  if (/\b(parar|pare|stop|parar leitura|pare a leitura|silencio|cala)\b/.test(t)) {
+    pararLeitura();
+    falarFeedback('Leitura parada.');
+    return;
+  }
+
+  // Fonte
+  if (/\b(aumentar fonte|aumentar a fonte|fonte maior|aumentar|maior)\b/.test(t)) {
+    aumentarFonte();
+    falarFeedback('Fonte aumentada.');
+    return;
+  }
+  if (/\b(diminuir fonte|diminuir a fonte|fonte menor|diminuir|menor)\b/.test(t)) {
+    diminuirFonte();
+    falarFeedback('Fonte diminuída.');
+    return;
+  }
+
+  // Contraste
+  if (/\b(contraste|alto contraste|modo contraste|inverter cores)\b/.test(t)) {
+    contraste();
+    falarFeedback('Contraste alternado.');
+    return;
+  }
+
+  // Navegação
+  if (/\b(inicio|home|pagina inicial)\b/.test(t)) {
+    irPara('inicio');
+    falarFeedback('Indo para o início.');
+    return;
+  }
+  if (/\b(vagas|buscar vagas|oportunidades|encontrar vagas)\b/.test(t)) {
+    irPara('vagas');
+    falarFeedback('Indo para as vagas.');
+    return;
+  }
+  if (/\b(perfil|meu perfil|criar perfil)\b/.test(t)) {
+    irPara('perfil');
+    falarFeedback('Indo para o perfil.');
+    return;
+  }
+  if (/\b(candidaturas|minhas candidaturas|candidatura)\b/.test(t)) {
+    irPara('candidaturas');
+    falarFeedback('Indo para as candidaturas.');
+    return;
+  }
+  if (/\b(empresa|area da empresa|modo empresa)\b/.test(t)) {
+    if (!modoEmpresa) alternarModo();
+    else document.getElementById('empresa').scrollIntoView({behavior:'smooth'});
+    falarFeedback('Área da empresa.');
+    return;
+  }
+
+  // Ajuda
+  if (/\b(ajuda|comandos|o que posso dizer|lista de comandos)\b/.test(t)) {
+    const msg = 'Comandos disponíveis: ler, parar, aumentar fonte, diminuir fonte, contraste, início, vagas, perfil, candidaturas e empresa.';
+    falarFeedback(msg);
+    mostrarStatusVoz(msg, true);
+    return;
+  }
+
+  // Comando não reconhecido — feedback discreto
+  mostrarStatusVoz('Comando não reconhecido: “' + frase + '”. Diga “ajuda” para ver a lista.', true);
+}
+
+function falarFeedback(texto) {
+  if (!('speechSynthesis' in window)) return;
+  // Não interrompe a leitura longa da página; só fala se não estiver lendo
+  if (speechSynthesis.speaking) return;
+  const u = new SpeechSynthesisUtterance(texto);
+  u.lang = 'pt-BR';
+  u.rate = 1.05;
+  speechSynthesis.speak(u);
+}
+
+function mostrarStatusVoz(msg, ativo) {
+  const el = document.getElementById('statusVoz');
+  el.textContent = msg;
+  el.className = ativo ? (ouvindo ? 'ativo ouvindo' : 'ativo') : '';
+  if (!ativo) el.style.display = 'none';
+  else el.style.display = 'block';
+}
+
+function atualizarUIVoz() {
+  const btn = document.getElementById('btnVoz');
+  if (ouvindo) {
+    btn.classList.add('listening');
+    btn.setAttribute('aria-pressed', 'true');
+    btn.textContent = '🔴 Ouvindo… (clique para parar)';
+    mostrarStatusVoz('Microfone ativo. Diga um comando: ler, parar, aumentar fonte, vagas…', true);
+  } else {
+    btn.classList.remove('listening');
+    btn.setAttribute('aria-pressed', 'false');
+    btn.textContent = '🎤 Comandos de voz';
+    mostrarStatusVoz('', false);
+  }
+}
+
+function alternarVoz() {
+  if (!suporteReconhecimento()) {
+    alert('Seu navegador não suporta reconhecimento de voz. Use Chrome, Edge ou Safari atualizado e permita o microfone.');
+    return;
+  }
+  if (!reconhecimento) reconhecimento = criarReconhecimento();
+  if (!reconhecimento) return;
+
+  if (ouvindo) {
+    ouvindo = false;
+    try { reconhecimento.stop(); } catch (e) {}
+    atualizarUIVoz();
+  } else {
+    try {
+      reconhecimento.start();
+      ouvindo = true;
+      atualizarUIVoz();
+    } catch (e) {
+      alert('Não foi possível iniciar o microfone. Verifique a permissão e tente novamente.');
+      ouvindo = false;
+      atualizarUIVoz();
+    }
+  }
+}
+
+function renderVagas(){
+ const q=(document.getElementById('busca').value||'').toLowerCase(),loc=document.getElementById('localFiltro').value,ac=document.getElementById('acessFiltro').value;
+ const arr=getVagas().filter(v=>{
+  const texto=(v.titulo+' '+v.empresa+' '+v.descricao).toLowerCase();
+  const okQ=!q||texto.includes(q),okL=!loc||v.local===loc;
+  const okA=!ac||(ac==='libras'&&v.libras)||(ac==='cego'&&v.leitor)||(ac==='remoto'&&v.modalidade==='Remoto');
+  return okQ&&okL&&okA
+ });
+ const box=document.getElementById('listaVagas');
+ if(!arr.length){box.innerHTML='<div class="empty">Nenhuma vaga encontrada com esses filtros.</div>';return}
+ box.innerHTML=arr.map(v=>`
+ <article class="card" aria-label="Vaga ${esc(v.titulo)}">
+  ${v.pcd?'<span class="badge green">♿ Exclusiva PCD</span>':''}
+  ${v.libras?'<span class="badge">🧏 Libras</span>':''}
+  ${v.leitor?'<span class="badge">🔊 Leitor de tela</span>':''}
+  ${v.legendas?'<span class="badge">CC Legendas</span>':''}
+  <div class="job-title">${esc(v.titulo)}</div>
+  <div class="meta">🏢 ${esc(v.empresa)} · 📍 ${esc(v.local)} · ${esc(v.modalidade)}</div>
+  <p>${esc(v.descricao)}</p>
+  <div class="actions">
+   <button onclick="verVaga(${v.id})">Ver detalhes</button>
+   <button class="btn success" onclick="candidatar(${v.id})">📩 Candidatar-me</button>
+  </div>
+ </article>`).join('');
+}
+
+function verVaga(id){
+ const v=getVagas().find(x=>x.id===id);if(!v)return;
+ document.getElementById('modalTitulo').textContent=v.titulo;
+ document.getElementById('modalConteudo').innerHTML=`
+ <p><strong>Empresa:</strong> ${esc(v.empresa)}</p>
+ <p><strong>Local:</strong> ${esc(v.local)}</p>
+ <p><strong>Modalidade:</strong> ${esc(v.modalidade)}</p>
+ <p>${esc(v.descricao)}</p>
+ <h3>Acessibilidade oferecida</h3>
+ <ul>
+  <li>${v.libras?'✅':'❌'} Atendimento/interação em Libras</li>
+  <li>${v.leitor?'✅':'❌'} Compatibilidade com leitor de tela</li>
+  <li>${v.legendas?'✅':'❌'} Vídeos/entrevistas com legendas</li>
+ </ul>`;
+ document.getElementById('modal').classList.remove('hidden');
+}
+function fecharModal(){document.getElementById('modal').classList.add('hidden')}
+
+function candidatar(id){
+ const p=getPerfil(),v=getVagas().find(x=>x.id===id);
+ if(!v)return;
+ if(!p.nome){irPara('perfil');document.getElementById('perfilMsg').innerHTML='<div class="notice info">Preencha e salve seu perfil antes de enviar uma candidatura.</div>';return}
+ let cs=getCand();
+ if(cs.some(c=>c.vagaId===id)){alert('Você já se candidatou a esta vaga.');return}
+ cs.unshift({id:Date.now(),vagaId:id,nome:p.nome,data:new Date().toLocaleDateString('pt-BR'),status:'Enviada'});
+ setCand(cs);renderCandidaturas();alert('Candidatura enviada com sucesso!');irPara('candidaturas');
+}
+
+function renderCandidaturas(){
+ const box=document.getElementById('listaCandidaturas'),cs=getCand(),vs=getVagas();
+ if(!cs.length){box.innerHTML='<div class="empty">Você ainda não enviou nenhuma candidatura.</div>';return}
+ box.innerHTML=cs.map(c=>{let v=vs.find(x=>x.id===c.vagaId);return v?`
+ <div class="card">
+  <div class="job-title">${esc(v.titulo)}</div>
+  <div class="meta">${esc(v.empresa)} · Candidatura em ${c.data}</div>
+  <p>Status: <span class="status ${c.status.toLowerCase()}">${esc(c.status)}</span></p>
+ </div>`:''}).join('');
+}
+
+function salvarPerfil(){
+ const p={
+  nome:val('nome'),email:val('email'),telefone:val('telefone'),cidade:val('cidade'),objetivo:val('objetivo'),
+  habilidades:val('habilidades'),curriculo:val('curriculo'),
+  visual:checked('pcdVisual'),surda:checked('pcdSurda'),libras:checked('libras'),legendas:checked('legendas'),outros:checked('outrosAcess')
+ };
+ if(!p.nome||!p.email){document.getElementById('perfilMsg').innerHTML='<div class="notice error">Nome e e-mail são obrigatórios.</div>';return}
+ localStorage.setItem(KEY_PERFIL,JSON.stringify(p));
+ document.getElementById('perfilMsg').innerHTML='<div class="notice success">Perfil salvo neste dispositivo.</div>';
+}
+function carregarPerfil(){
+ const p=getPerfil();['nome','email','telefone','cidade','objetivo','habilidades','curriculo'].forEach(k=>{if(p[k]!==undefined)document.getElementById(k).value=p[k]||''});
+ ['pcdVisual','pcdSurda','libras','legendas','outrosAcess'].forEach((id,i)=>document.getElementById(id).checked=!![p.visual,p.surda,p.libras,p.legendas,p.outros][i]);
+}
+function limparPerfil(){document.querySelectorAll('#perfil input,#perfil textarea').forEach(e=>{if(e.type==='checkbox')e.checked=false;else e.value=''})}
+
+function cadastrarVaga(){
+ const t=val('vTitulo'),e=val('vEmpresa'),l=val('vLocal');
+ if(!t||!e||!l){alert('Preencha título, empresa e local.');return}
+ let vs=getVagas();
+ vs.unshift({id:Date.now(),titulo:t,empresa:e,local:l,modalidade:val('vTipo'),descricao:val('vDesc')||'Sem descrição',libras:checked('vLibras'),leitor:checked('vLeitor'),legendas:checked('vLegendas'),pcd:checked('vPcD')});
+ setVagas(vs);
+ ['vTitulo','vEmpresa','vLocal','vDesc'].forEach(id=>document.getElementById(id).value='');
+ ['vLibras','vLeitor','vLegendas','vPcD'].forEach(id=>document.getElementById(id).checked=false);
+ renderVagas();renderEmpresa();alert('Vaga publicada com sucesso!');
+}
+function renderEmpresa(){
+ const box=document.getElementById('empresaVagas'),vs=getVagas();
+ box.innerHTML=vs.map(v=>`<div class="card"><strong>${esc(v.titulo)}</strong><p class="meta">${esc(v.empresa)} · ${esc(v.local)}</p><button class="btn danger small" onclick="removerVaga(${v.id})">Excluir</button></div>`).join('');
+}
+function removerVaga(id){if(!confirm('Excluir esta vaga?'))return;setVagas(getVagas().filter(v=>v.id!==id));renderVagas();renderEmpresa();renderCandidaturas()}
+function limparFiltros(){document.getElementById('busca').value='';document.getElementById('localFiltro').value='';document.getElementById('acessFiltro').value='';renderVagas()}
+function val(id){return document.getElementById(id).value.trim()}
+function checked(id){return document.getElementById(id).checked}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+carregarPerfil();renderVagas();renderCandidaturas();renderEmpresa();
+</script>
+</body>
+</html>
